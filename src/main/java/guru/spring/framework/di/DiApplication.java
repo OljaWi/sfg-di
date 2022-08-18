@@ -4,13 +4,20 @@ import guru.spring.framework.di.controllers.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
+//This is no longer needed, because there are no Components to scan, as we configured the spring beans in config class
+//@ComponentScan(basePackages={"com.springframework.pets", "guru.spring.framework.di"})
 @SpringBootApplication
 public class DiApplication {
 
 	public static void main(String[] args) {
 
 		ApplicationContext ctx = SpringApplication.run(DiApplication.class, args);
+
+		PetController petController=(PetController) ctx.getBean("petController", PetController.class);
+		System.out.println("-------The Best Pet is:--------");
+		System.out.println(petController.whichIstTheBestPet());
 
 		I18nController i18nController = (I18nController) ctx.getBean("i18nController");
 

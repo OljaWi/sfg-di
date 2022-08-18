@@ -1,5 +1,8 @@
 package guru.spring.framework.di.config;
 
+import com.springframework.pets.DogPetService;
+import com.springframework.pets.PetService;
+import com.springframework.pets.PetServiceFactory;
 import guru.spring.framework.di.repositories.EnglishGreetingRepository;
 import guru.spring.framework.di.repositories.EnglishGreetingRepositoryImpl;
 import guru.spring.framework.di.services.ConstructorGreetingService;
@@ -15,7 +18,8 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
-@Configuration //This is going to define different Beans
+//This is going to define different Beans, you can use it for third party packages
+@Configuration
 public class GreetingServiceConfig {
 
   @Bean
@@ -57,6 +61,22 @@ public class GreetingServiceConfig {
     return new I18nSpanishGreetingService();
   }
 
+  //This would be a third party package - we implemented the factory
+  @Bean
+  PetServiceFactory petServiceFactory(){
+    return new PetServiceFactory();
+  }
 
+  //The factory itself gets injected into the method at runtime, the factory method will get called
+  @Profile({"dog", "default"})
+  @Bean
+  PetService dogPetService(PetServiceFactory petServiceFactory){
+    return petServiceFactory.getPetService("dog");
+  }
+  @Profile("cat")
+  @Bean
+  PetService catPetService(PetServiceFactory petServiceFactory){
+    return petServiceFactory.getPetService("cat");
+  }
 
 }
